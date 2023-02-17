@@ -1,0 +1,7 @@
+- name: testTask1
+  type: exec
+  params:
+    command: cmd
+    args:
+      - /c
+      - dir "d:\" && mvn -version

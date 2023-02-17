@@ -1,0 +1,12 @@
+- name: var
+  impl: org.mvss.decl.steps.VariableDefinition
+- name: func
+  impl: org.mvss.decl.steps.FunctionDefinition
+- name: call
+  impl: org.mvss.decl.steps.FunctionCall
+- name: import
+  impl: org.mvss.decl.steps.Import
+- name: echo
+  impl: org.mvss.decl.steps.Echo
+- name: return
+  impl: org.mvss.decl.steps.Return

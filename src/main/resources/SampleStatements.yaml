@@ -1,0 +1,97 @@
+---
+# This is a sample yaml source file for generic declarative programming language in YAML
+
+# document syntax
+# Each document is an array of tasks. Everything in this language would be tasks for simplifications
+# Any kind of statement is a task - variable declaration, method declaration, doing any inbuilt operation or user defined operation,
+
+# Scope: Anything put directly into this document is global scope. Anything put int a method is method scope.
+
+# Variable declaration e.g. Declare a variable named myVar with value 10. using var task
+- step: var
+  data:
+    name: myVar
+    value: 10
+    #type: literal # Type is found implicitly based on value as basic data types if not mentioned.
+
+- step: var
+  data:
+    name: myArrayVar
+    value: [ 'a','b','c' ]
+
+- step: var
+  data:
+    name: myObjVar
+    value:
+      a: '1'
+      b: 2
+
+    # Expressions in initialization need explicitly type as expr to avoid taking literal as string value for initialization
+    #  <exprLHS>:
+    #    lhs: 2 # if not a dictionary the lhs/rhs will be assumed a literal
+    #    op: *
+    #    rhs:
+    #      lhs:
+    #        op: -
+    #        rhs: 2
+    #      op: +
+    #      rhs: 4
+    #For unary operations there will be only rhs and op e.g. unary -<expr>, +<expr> , item indexed <expr>, function call <expr>, not <expr>, var <expr>, property <expr>
+    #Binary operations include +, - , *, /, %, ^, and, or, equals, not equals, greater than or equals, less than or equals, greater, lesser
+    #Custom operations can be defined by user and used in the language
+
+- step: var
+  data:
+    name: myExprVar
+    type: expr
+    value: 2*$v{myVar}+$v{myArrayVal}[0] # Variable usage with $v{}  syntax and can have [] and . JSON Path syntax
+    # $p{} can be used for properties which could be a merge or environment variables and other properties
+    # Function call operation () can be added later as well
+
+# A variable or function task will register that identifier in the current scope
+# Functions
+- step: func
+  data:
+    name: main
+    params:
+      args: string array
+    returns: int
+    steps:
+      # Task statements.
+      - step: echo # echo will use $v{} and $p{} substitutions recursively to evaluate string before printing \$ should be used to escape
+        data:
+          value: "$v{args} $v{myExprVar}"
+      - step: echo
+        data:
+          type: expr
+          value: 2*$v{args}[0]+$v{myArrayVal}[1]
+      - step: var
+        data:
+          name: myLocalVar
+          value: 10
+      - step: echo
+        data:
+          value: "My global variable is $v{myVar2} and local variable is $v{myLocalVar}"
+      - step: return
+        data:
+          value: 0
+          # Default type is literal if expression, set type as expr and have expression in the value.
+
+# Method call
+- step: call
+  data:
+    name: main
+    parameters:
+      - Hello
+      - World
+    return: myReturnCode # the variable to save the return object to
+
+# Import: imports other source files into current scope
+- step: import
+  data: [ Sample.yaml ]
+
+
+
+
+
+
