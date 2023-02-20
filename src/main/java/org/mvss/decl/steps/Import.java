@@ -28,13 +28,6 @@ public class Import extends Step
    @Override
    public boolean run( Scope scope )
    {
-      //      if ( ( data != null ) && data.containsKey( "value" ) )
-      //      {
-      //         //TODO: Extract return value
-      //         System.err.println( "Error running import: no data provided" );
-      //         return false;
-      //      }
-
       System.out.println( "Not implemented yet" );
       return true;
    }

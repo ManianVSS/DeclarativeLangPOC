@@ -27,6 +27,7 @@ public abstract class WaitUtil {
      *                                   <b><u>Note: If using this option, use the return value as an indicator to close the thread.</u></b>
      * @return true if interrupted and configured to not throw {@link InterruptedException} else returns false
      */
+    @SuppressWarnings("UnusedReturnValue")
     public static boolean sleep(long milliseconds, boolean ignoreInterruptDuringSleep, boolean throwInterruptedException) throws InterruptedException {
         long currentTime = System.currentTimeMillis();
         long sleepUntil = currentTime + milliseconds;
@@ -116,7 +117,7 @@ public abstract class WaitUtil {
      * Wait for a generic condition to meet whose completion is evaluated using the CanThrowBooleanSupplier functional interface.
      * The condition is evaluated every poll interval specified until the time-out.
      * Upon timeout wait result is marked as failed
-     * An exception also causes the wait to fail with the Throwable returned in the wait result.
+     * An exception also causes the wait to fail with the Throwable returned with the wait result.
      * waitIterationTask is the task to be performed on ever poll interval.
      *
      * @param waitCondition     CanThrowBooleanSupplier
@@ -155,7 +156,7 @@ public abstract class WaitUtil {
      * Wait for a generic condition to start failing whose completion is evaluated using the CanThrowBooleanSupplier functional interface.
      * The condition is evaluated every poll interval specified until the time-out.
      * Upon timeout wait result is marked as failed
-     * An exception also causes the wait to fail with the Throwable returned in the wait result.
+     * An exception also causes the wait to fail with the Throwable returned with the wait result.
      * waitIterationTask is the task to be performed on ever poll interval.
      *
      * @param failWaitCondition CanThrowBooleanSupplier

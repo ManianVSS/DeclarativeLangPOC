@@ -15,7 +15,7 @@ public class FunctionDefinition extends Step {
     private String name;
 
     @Override
-    public void execute(Runner runner, Scope scope) throws Throwable {
+    public void execute(Runner runner, Scope scope) {
         System.out.println("Function definition: " + this);
 
         if (scope.getFunctions().containsKey(name)) {

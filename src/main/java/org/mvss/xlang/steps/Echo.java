@@ -15,7 +15,7 @@ public class Echo extends Step {
     private String message;
 
     @Override
-    public void execute(Runner runner, Scope scope) throws Throwable {
+    public void execute(Runner runner, Scope scope) {
         System.out.println(RegexUtil.replaceVariables(scope.getVariables(), message));
     }
 }

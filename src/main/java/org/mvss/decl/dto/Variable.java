@@ -16,8 +16,4 @@ public class Variable implements Serializable
    private String       name;
    @Builder.Default
    private Serializable value = null;
-//   @JsonIgnore
-//   private String fileName;
-//   @JsonIgnore
-//   private long   stepNumber;
 }

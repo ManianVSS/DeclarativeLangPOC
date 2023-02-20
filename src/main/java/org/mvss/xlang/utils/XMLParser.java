@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class XMLParser {
 
-    public static DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+    public static final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
     public static Document readDocumentFromFile(String xmlFileName) throws ParserConfigurationException, IOException, SAXException {
         File file = new File(xmlFileName);
@@ -132,43 +132,4 @@ public class XMLParser {
     public static String writeObject(String name, Serializable object) throws JsonProcessingException {
         return new XmlMapper().writerWithDefaultPrettyPrinter().writeValueAsString(object);
     }
-
-//    private static void printDocumentDetails(Element documentElement, int level) {
-//        String elementName = documentElement.getNodeName();
-//        printLevelChars("  ", level, elementName + ":");
-//        NodeList nodeList = documentElement.getChildNodes();//doc.getElementsByTagName("student");
-////        printLevelChars("  ", level + 1, "Attributes: ");
-//        NamedNodeMap attributes = documentElement.getAttributes();
-//        for (int attrIndex = 0; attrIndex < attributes.getLength(); attrIndex++) {
-//            Node attribute = attributes.item(attrIndex);
-//            printLevelChars("  ", level + 1, attribute.getNodeName() + ": " + attribute.getNodeValue());
-//        }
-//        // nodeList is not iterable, so we are using for loop
-//        for (int itr = 0; itr < nodeList.getLength(); itr++) {
-//            Node node = nodeList.item(itr);
-//            node.normalize();
-//            switch (node.getNodeType()) {
-//                case Node.ELEMENT_NODE:
-//                    Element childElement = (Element) node;
-//                    printDocumentDetails(childElement, level + 1);
-//                    break;
-//                case Node.TEXT_NODE:
-//                    String text = ((Text) node).getWholeText();
-//
-//                    if (StringUtils.isNotBlank(text)) {
-//                        printLevelChars("  ", level + 1, "#" + text);
-//                    }
-//                default:
-//                    break;
-//            }
-//        }
-//    }
-
-//    private static void printLevelChars(CharSequence levelCharSequence, int level, CharSequence toPrint) {
-//        for (int i = 0; i < level; i++) {
-//            System.out.print(levelCharSequence);
-//        }
-//        System.out.println(toPrint);
-//    }
-
 }

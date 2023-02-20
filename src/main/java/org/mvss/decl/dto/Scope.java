@@ -19,7 +19,4 @@ public class Scope
    private ConcurrentHashMap<String, Variable> variables       = new ConcurrentHashMap<>();
    @Builder.Default
    private ConcurrentHashMap<String, Function> functions       = new ConcurrentHashMap<>();
-   //   private String                                  fileName;
-   //   private long                                    stepNumber;
-   //   private long                                    column;
 }

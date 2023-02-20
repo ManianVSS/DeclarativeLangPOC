@@ -50,7 +50,7 @@ public class Runner {
 
             for (String key : stepDefImplNameMapping.keySet()) {
 
-                if (stepDefMapping.keySet().contains(key)) {
+                if (stepDefMapping.containsKey(key)) {
                     throw new RuntimeException("Step definition already mapped for: " + key + " to " + stepDefMapping.get(key).getCanonicalName());
                 }
 
@@ -83,11 +83,8 @@ public class Runner {
 
                 Class<? extends Step> stepDefClass = stepDefMapping.get(step);
                 Serializable objectRead = XMLParser.readAttributesAsObject(stepElement);
-//                Step stepObject = stepDefClass.getDeclaredConstructor().newInstance();
                 Step stepObjectRead = objectMapper.convertValue(objectRead, stepDefClass);
                 stepObjectRead.setSteps(getSteps(stepElement));
-//                stepObjectRead.init(stepElement);
-//                Runner.NULL_AWARE_BEAN_UTILS_BEAN.copyProperties(stepObject, stepObjectRead);
                 steps.add(stepObjectRead);
             }
         }
@@ -123,8 +120,7 @@ public class Runner {
             for (Step step : steps) {
                 step.execute(this, scope);
             }
-        }catch(FunctionCallReturnException ignored)
-        {
+        } catch (FunctionCallReturnException ignored) {
         }
     }
 }

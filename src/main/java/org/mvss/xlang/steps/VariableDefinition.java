@@ -21,7 +21,7 @@ public class VariableDefinition extends Step {
     private String expr;
 
     @Override
-    public void execute(Runner runner, Scope scope) throws Throwable {
+    public void execute(Runner runner, Scope scope)  {
         System.out.println("Variable Definition: " + this);
         if (!StringUtils.isBlank(expr)) {
             value = RegexUtil.replaceVariables(scope.getVariables(), expr);
