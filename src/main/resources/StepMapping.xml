@@ -4,5 +4,5 @@
     <!--    <call>org.mvss.xlang.steps.FunctionCall</call>-->
     <!--    <import>org.mvss.xlang.steps.Import</import>-->
     <!--    <return>org.mvss.xlang.steps.Return</return>-->
-    <echo>org.mvss.xlang.steps.Echo</echo>
+    <!--    <echo>org.mvss.xlang.steps.Echo</echo>-->
 </stepdefs>

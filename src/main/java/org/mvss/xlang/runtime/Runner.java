@@ -42,6 +42,7 @@ public class Runner {
         stepDefMapping.put("call", FunctionCall.class);
         stepDefMapping.put("return", Return.class);
         stepDefMapping.put("import", Import.class);
+        stepDefMapping.put("echo", Echo.class);
 
         try {
             String mappingFileContents = ClassPathLoaderUtils.readAllText(STEP_MAPPING_XML);

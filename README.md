@@ -3,7 +3,9 @@
 Declarative Language POC for general automation</br>
 </br>
 To run from IDE </br>
-If you get javax module error for XML, add module option -add-modules java.xml.bind</br>
+If you get javax module error for XML, add module option</br>
+--add-modules java.xml</br>
+to DeclarativeLangPOC module in IDE settings</br>
 run org.mvss.xlang.runtime.Main</br>
 from /home/manian/Checkouts/DeclarativeLangPOC/target/test-classes</br>
 with a JDK 11</br>
