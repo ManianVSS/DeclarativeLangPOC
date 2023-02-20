@@ -1,11 +1,9 @@
 package org.mvss.decl.steps;
 
 import com.fasterxml.jackson.databind.jsontype.NamedType;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 import org.mvss.decl.dto.Scope;
 import org.mvss.decl.dto.Step;
 
@@ -15,7 +13,6 @@ import java.util.HashMap;
 @Getter
 @Setter
 @NoArgsConstructor
-@SuperBuilder
 public class Return extends Step
 {
    static

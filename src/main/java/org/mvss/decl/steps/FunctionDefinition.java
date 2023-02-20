@@ -1,11 +1,9 @@
 package org.mvss.decl.steps;
 
 import com.fasterxml.jackson.databind.jsontype.NamedType;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 import org.mvss.decl.dto.Function;
 import org.mvss.decl.dto.Scope;
 import org.mvss.decl.dto.Step;
@@ -17,7 +15,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @Getter
 @Setter
 @NoArgsConstructor
-@SuperBuilder
 public class FunctionDefinition extends Step
 {
    static

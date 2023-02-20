@@ -1,19 +1,24 @@
 package org.mvss.decl.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.mvss.decl.steps.VariableDefinition;
 
 import java.io.Serializable;
 import java.util.HashMap;
 
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonSubTypes( {@JsonSubTypes.Type( value = VariableDefinition.class, name = "var" ), @JsonSubTypes.Type( value = Function.class, name = "func" ),} )
 public abstract class Step implements Serializable
 {
    protected String                        step;
