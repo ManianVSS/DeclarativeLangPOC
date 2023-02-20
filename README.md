@@ -1,10 +1,12 @@
 # DeclarativeLangPOC
-Declarative Language POC for general automation
+
+Declarative Language POC for general automation</br>
+</br>
 To run from IDE </br>
-If you get javax module error for XML, add module option -add-modules java.xml.bind
-run org.mvss.xlang.runtime.Main
-from /home/manian/Checkouts/DeclarativeLangPOC/target/test-classes
-with a JDK 11 (with )
+If you get javax module error for XML, add module option -add-modules java.xml.bind</br>
+run org.mvss.xlang.runtime.Main</br>
+from /home/manian/Checkouts/DeclarativeLangPOC/target/test-classes</br>
+with a JDK 11</br>
 
 To Build </br>
 mvn clean install -DskipTests -T 8
