@@ -124,4 +124,11 @@ public class Runner {
         } catch (FunctionCallReturnException ignored) {
         }
     }
+
+    public void importFile(String xmlFileName, Scope scope) throws Throwable {
+        Document doc = XMLParser.readDocumentFromFile(xmlFileName);
+        Element rootElement = doc.getDocumentElement();
+        rootElement.normalize();
+        run(rootElement, scope);
+    }
 }

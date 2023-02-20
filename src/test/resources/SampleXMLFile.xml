@@ -26,4 +26,13 @@
 
     <var name="pointer" value="myVar1"/>
     <echo message="Value of object at pointer is ${${pointer}}"/>
+
+    <import fileName="SampleIncludeXMLFile.xml"/>
+
+    <echo message="Before myVar2=${myVar2} mySimpleVar2=${mySimpleVar2} myFunVar2=${myFunVar2} mySimpleFunVar2=${mySimpleFunVar2}"/>
+    <call name="myFunction2" outputParameters="[myFunVar2, mySimpleFunVar2]"/>
+    <echo message="After myVar2=${myVar2} mySimpleVar2=${mySimpleVar2} myFunVar2=${myFunVar2} mySimpleFunVar2=${mySimpleFunVar2}"/>
+
+    <var name="pointer2" value="myVar2"/>
+    <echo message="Value of object at pointer is ${${pointer2}}"/>
 </XLangExampleProgram>

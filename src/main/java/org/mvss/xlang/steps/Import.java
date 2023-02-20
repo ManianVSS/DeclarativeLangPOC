@@ -11,11 +11,10 @@ import org.mvss.xlang.runtime.Step;
 @Setter
 @ToString
 public class Import extends Step {
-
     private String fileName;
 
     @Override
     public void execute(Runner runner, Scope scope) throws Throwable {
-        runner.run(fileName, scope);
+        runner.importFile(fileName, scope);
     }
 }
