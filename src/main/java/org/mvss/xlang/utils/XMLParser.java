@@ -1,10 +1,7 @@
 package org.mvss.xlang.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.CharacterData;
 import org.w3c.dom.*;
@@ -22,10 +19,6 @@ import java.util.Map;
 
 public class XMLParser {
 
-    public static final TypeReference<HashMap<String, Serializable>> genericHashMapObjectType = new TypeReference<>() {
-    };
-
-
     public static DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
     public static Document readDocumentFromFile(String xmlFileName) throws ParserConfigurationException, IOException, SAXException {
@@ -41,7 +34,6 @@ public class XMLParser {
         return dbf.newDocumentBuilder().parse(new InputSource(new StringReader(xmlString)));
     }
 
-    public static final ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
 
     public static Serializable readObjectFromFile(String fileName) throws IOException, ParserConfigurationException, SAXException {
         return readObject(new File(fileName));
@@ -55,16 +47,27 @@ public class XMLParser {
         return readObject(readDocument(xmlString).getDocumentElement());
     }
 
+
+    public static HashMap<String, Serializable> readAttributesAsObject(Element documentElement) throws JsonProcessingException {
+        HashMap<String, Serializable> parsedObject = new HashMap<>();
+        NamedNodeMap attributes = documentElement.getAttributes();
+        for (int attrIndex = 0; attrIndex < attributes.getLength(); attrIndex++) {
+            Node attribute = attributes.item(attrIndex);
+            //TODO: Replace objectMapper with a standalone object parser using regex which can identify value types.
+            Serializable value = ParserUtils.readValue(attribute.getNodeValue(), Serializable.class);
+            parsedObject.put(attribute.getNodeName(), value);
+        }
+        return parsedObject;
+    }
+
     public static Serializable readObject(Element documentElement) throws JsonProcessingException {
         HashMap<String, Serializable> parsedObject = new HashMap<>();
-
-        String elementName = documentElement.getNodeName();
         NodeList children = documentElement.getChildNodes();
         NamedNodeMap attributes = documentElement.getAttributes();
         for (int attrIndex = 0; attrIndex < attributes.getLength(); attrIndex++) {
             Node attribute = attributes.item(attrIndex);
             //TODO: Replace objectMapper with a standalone object parser using regex which can identify value types.
-            Serializable value = objectMapper.readValue(attribute.getNodeValue(), Serializable.class);
+            Serializable value = ParserUtils.readValue(attribute.getNodeValue(), Serializable.class);
             parsedObject.put(attribute.getNodeName(), value);
         }
         for (int itr = 0; itr < children.getLength(); itr++) {
@@ -81,7 +84,7 @@ public class XMLParser {
                     String text = (childNode.getNodeType() == Node.TEXT_NODE) ? ((Text) childNode).getWholeText() :
                             ((CharacterData) childNode).getData();
                     if (StringUtils.isNotBlank(text)) {
-                        Serializable objectToMerge = objectMapper.readValue(text, Serializable.class);
+                        Serializable objectToMerge = ParserUtils.readValue(text, Serializable.class);
 
                         if (objectToMerge instanceof Map) {
                             //noinspection unchecked
@@ -118,10 +121,9 @@ public class XMLParser {
         NodeList childElementList = element.getElementsByTagName(name);
 
         if (childElementList.getLength() > 0) {
-            String objText = StringUtils.trim(childElementList.item(childElementList.getLength() - 1).getTextContent());
-            objectRead = objectMapper.readValue(objText, mappingClassType);
+            objectRead = readObject((Element) childElementList.item(childElementList.getLength() - 1));
         } else if (element.hasAttribute(name)) {
-            objectRead = objectMapper.readValue(element.getAttribute(name), mappingClassType);
+            objectRead = ParserUtils.readValue(element.getAttribute(name), mappingClassType);
         }
 
         return objectRead;

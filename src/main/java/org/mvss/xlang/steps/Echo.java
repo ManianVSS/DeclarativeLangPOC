@@ -2,14 +2,20 @@ package org.mvss.xlang.steps;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.mvss.xlang.dto.Step;
+import lombok.ToString;
+import org.mvss.xlang.dto.Scope;
+import org.mvss.xlang.runtime.Runner;
+import org.mvss.xlang.runtime.Step;
+import org.mvss.xlang.utils.RegexUtil;
 
 @Getter
 @Setter
-public class Echo implements Step {
+@ToString
+public class Echo extends Step {
+    private String message;
 
     @Override
-    public boolean execute() throws Throwable {
-        return false;
+    public void execute(Runner runner, Scope scope) throws Throwable {
+        System.out.println(RegexUtil.replaceVariables(scope.getVariables(), message));
     }
 }

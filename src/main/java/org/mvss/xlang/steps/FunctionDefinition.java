@@ -2,14 +2,25 @@ package org.mvss.xlang.steps;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.mvss.xlang.dto.Step;
+import lombok.ToString;
+import org.mvss.xlang.dto.Scope;
+import org.mvss.xlang.runtime.Runner;
+import org.mvss.xlang.runtime.Step;
 
 @Getter
 @Setter
-public class FunctionDefinition implements Step {
-    
+@ToString//(callSuper = true)
+public class FunctionDefinition extends Step {
+
+    private String name;
+
     @Override
-    public boolean execute() throws Throwable {
-        return false;
+    public void execute(Runner runner, Scope scope) throws Throwable {
+        System.out.println("Function definition: " + this);
+
+        if (scope.getFunctions().containsKey(name)) {
+            throw new RuntimeException("Function already defined " + name);
+        }
+        scope.getFunctions().put(name, steps);
     }
 }

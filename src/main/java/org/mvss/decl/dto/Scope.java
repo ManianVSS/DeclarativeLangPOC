@@ -2,7 +2,6 @@ package org.mvss.decl.dto;
 
 import lombok.*;
 
-import java.io.Serializable;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Getter

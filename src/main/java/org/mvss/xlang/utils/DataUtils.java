@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
 /**
@@ -18,6 +19,15 @@ public class DataUtils {
      */
     public static <K, V> HashMap<K, V> cloneMap(Map<K, V> source) {
         HashMap<K, V> clone = new HashMap<>();
+
+        if (source != null) {
+            clone.putAll(source);
+        }
+        return clone;
+    }
+
+    public static <K, V> ConcurrentHashMap<K, V> cloneConcurrentMap(Map<K, V> source) {
+        ConcurrentHashMap<K, V> clone = new ConcurrentHashMap<>();
 
         if (source != null) {
             clone.putAll(source);

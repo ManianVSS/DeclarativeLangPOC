@@ -1,24 +1,29 @@
 <XLangExampleProgram>
-    <!--A sample XML language program-->
-    <var name="myVar1" value="10">
-        <value desc="This is an overridden value">
-            <attr1 field1="123" field2="A123"/>
-        </value>
-    </var>
+    <echo message="A sample XML language program"/>
+
+    <var name="myVar1" value="10"/>
     <var name="mySimpleVar" value="True"/>
-    <func>
-        <id>101</id>
-        <firstname>Naman</firstname>
-        <lastname>Kumar</lastname>
-        <subject>Math</subject>
-        <boolFlag>False</boolFlag>
-        <marks attrWontAppear="true">83</marks>
-        <obj attr1="abc" attr2="100.3" attr3="10">
-            <![CDATA[
-            id: 10
-            name: myObj
-            ]]>
-            anotherTextBasedField: Value
-        </obj>
+
+    <func name="myFunction1">
+        <echo message="A sample function"/>
+        <var name="myVar1" value="20"/>
+        <var name="myFunVar1" value="10"/>
+        <echo message="Variables are ${myVar1}, ${mySimpleVar}, ${myFunVar1}, ${mySimpleFunVar}"/>
+        <var name="mySimpleFunVar" value="True"/>
+
+        <return/>
+        <echo message="*** This message should not get printed"/>
+        <echo message="&amp; This message should not get printed"/>
+        <echo message=": This message should not get printed"/>
+        <echo message="-This message should not get printed"/>
+        <echo message="% This message should not get printed"/>
+        <echo message="@ This message should not get printed"/>
     </func>
+
+    <echo message="Before myVar1=${myVar1} mySimpleVar=${mySimpleVar} myFunVar1=${myFunVar1} mySimpleFunVar=${mySimpleFunVar}"/>
+    <call name="myFunction1" outputParameters="[myFunVar1, mySimpleFunVar]"/>
+    <echo message="After myVar1=${myVar1} mySimpleVar=${mySimpleVar} myFunVar1=${myFunVar1} mySimpleFunVar=${mySimpleFunVar}"/>
+
+    <var name="pointer" value="myVar1"/>
+    <echo message="Value of object at pointer is ${${pointer}}"/>
 </XLangExampleProgram>

@@ -1,6 +1,5 @@
 package org.mvss.decl.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import java.io.Serializable;

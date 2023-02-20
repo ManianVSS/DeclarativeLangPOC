@@ -1,8 +1,8 @@
 <stepdefs>
-    <var>org.mvss.xlang.steps.VariableDefinition</var>
-    <func>org.mvss.xlang.steps.FunctionDefinition</func>
-    <call>org.mvss.xlang.steps.FunctionCall</call>
-    <import>org.mvss.xlang.steps.Import</import>
+    <!--    <var>org.mvss.xlang.steps.VariableDefinition</var>-->
+    <!--    <func>org.mvss.xlang.steps.FunctionDefinition</func>-->
+    <!--    <call>org.mvss.xlang.steps.FunctionCall</call>-->
+    <!--    <import>org.mvss.xlang.steps.Import</import>-->
+    <!--    <return>org.mvss.xlang.steps.Return</return>-->
     <echo>org.mvss.xlang.steps.Echo</echo>
-    <return>org.mvss.xlang.steps.Return</return>
 </stepdefs>
