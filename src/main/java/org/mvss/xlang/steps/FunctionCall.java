@@ -6,10 +6,10 @@ import lombok.ToString;
 import org.mvss.xlang.dto.Scope;
 import org.mvss.xlang.runtime.Runner;
 import org.mvss.xlang.runtime.Step;
-import org.mvss.xlang.utils.DataUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
@@ -18,6 +18,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class FunctionCall extends Step {
 
     private String name;
+
+    private HashMap<String, Serializable> inputParameters;
 
     private ArrayList<String> outputParameters;
 
@@ -29,21 +31,20 @@ public class FunctionCall extends Step {
             throw new RuntimeException("Could not find function named: " + name);
         }
         Scope functionScope = new Scope();
-//        functionScope.setParent(scope);
-        functionScope.setCurrentFunction(name);
-        functionScope.setVariables(DataUtils.cloneConcurrentMap(scope.getVariables()));
-        functionScope.setFunctions(DataUtils.cloneConcurrentMap(scope.getFunctions()));
-//        functionScope.setOutputParameters(outputParameters);
+        functionScope.setParentScope(scope);
+
+        if (inputParameters != null) {
+            functionScope.getVariables().putAll(inputParameters);
+        }
 
         ArrayList<Step> functionStep = scope.getFunctions().get(name);
         runner.run(functionStep, functionScope);
 
         //Copy back output parameters to parent scope
-        ConcurrentHashMap<String, Serializable> functionScopeVariables = functionScope.getVariables();
         ConcurrentHashMap<String, Serializable> scopeVariables = scope.getVariables();
         for (String outputParameter : outputParameters) {
-            if (functionScopeVariables.containsKey(outputParameter)) {
-                scopeVariables.put(outputParameter, functionScopeVariables.get(outputParameter));
+            if (functionScope.hasLocalVariable(outputParameter)) {
+                scopeVariables.put(outputParameter, functionScope.getVariable(outputParameter));
             }
         }
     }

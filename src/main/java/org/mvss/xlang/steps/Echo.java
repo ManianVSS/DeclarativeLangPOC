@@ -16,6 +16,6 @@ public class Echo extends Step {
 
     @Override
     public void execute(Runner runner, Scope scope) {
-        System.out.println(RegexUtil.replaceVariables(scope.getVariables(), message));
+        System.out.println(RegexUtil.replaceVariables(scope::getVariable, message));
     }
 }

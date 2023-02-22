@@ -6,7 +6,6 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.mvss.xlang.dto.Scope;
 import org.mvss.xlang.steps.*;
 import org.mvss.xlang.utils.ClassPathLoaderUtils;
-import org.mvss.xlang.utils.NullAwareBeanUtilsBean;
 import org.mvss.xlang.utils.XMLParser;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -23,8 +22,6 @@ public class Runner {
     public static final String STEP_MAPPING_XML = "StepMapping.xml";
 
     public static final ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
-    public static final NullAwareBeanUtilsBean NULL_AWARE_BEAN_UTILS_BEAN = new NullAwareBeanUtilsBean();
-
 
     static {
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);

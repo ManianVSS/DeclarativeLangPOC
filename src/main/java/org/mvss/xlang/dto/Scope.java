@@ -13,9 +13,37 @@ import java.util.concurrent.ConcurrentHashMap;
 @AllArgsConstructor
 @Builder
 public class Scope {
-    private String currentFunction;
+    private Scope parentScope;
     @Builder.Default
     private ConcurrentHashMap<String, Serializable> variables = new ConcurrentHashMap<>();
     @Builder.Default
     private ConcurrentHashMap<String, ArrayList<Step>> functions = new ConcurrentHashMap<>();
+
+    public boolean hasLocalVariable(String name) {
+        return variables.containsKey(name);
+    }
+
+    public Serializable getVariable(String name) {
+        if (variables.containsKey(name)) {
+            return variables.get(name);
+        } else if (parentScope != null) {
+            return parentScope.getVariable(name);
+        } else {
+            return null;
+        }
+    }
+
+    public boolean hasLocalFunction(String name) {
+        return functions.containsKey(name);
+    }
+
+    public ArrayList<Step> getFunction(String name) {
+        if (functions.containsKey(name)) {
+            return functions.get(name);
+        } else if (parentScope != null) {
+            return parentScope.getFunction(name);
+        } else {
+            return null;
+        }
+    }
 }
