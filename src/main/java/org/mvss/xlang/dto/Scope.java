@@ -1,7 +1,7 @@
 package org.mvss.xlang.dto;
 
 import lombok.*;
-import org.mvss.xlang.runtime.Step;
+import org.mvss.xlang.steps.Step;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,6 +33,10 @@ public class Scope {
         }
     }
 
+    public void putVariable(String name, Serializable value) {
+        variables.put(name, value);
+    }
+
     public boolean hasLocalFunction(String name) {
         return functions.containsKey(name);
     }
@@ -45,5 +49,9 @@ public class Scope {
         } else {
             return null;
         }
+    }
+
+    public void putFunction(String name, ArrayList<Step> steps) {
+        functions.put(name, steps);
     }
 }

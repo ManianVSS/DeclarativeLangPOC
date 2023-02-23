@@ -5,7 +5,6 @@ import lombok.Setter;
 import lombok.ToString;
 import org.mvss.xlang.dto.Scope;
 import org.mvss.xlang.runtime.Runner;
-import org.mvss.xlang.runtime.Step;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -41,10 +40,12 @@ public class FunctionCall extends Step {
         runner.run(functionStep, functionScope);
 
         //Copy back output parameters to parent scope
-        ConcurrentHashMap<String, Serializable> scopeVariables = scope.getVariables();
-        for (String outputParameter : outputParameters) {
-            if (functionScope.hasLocalVariable(outputParameter)) {
-                scopeVariables.put(outputParameter, functionScope.getVariable(outputParameter));
+        if ((outputParameters != null) && !outputParameters.isEmpty()) {
+            ConcurrentHashMap<String, Serializable> scopeVariables = scope.getVariables();
+            for (String outputParameter : outputParameters) {
+                if (functionScope.hasLocalVariable(outputParameter)) {
+                    scopeVariables.put(outputParameter, functionScope.getVariable(outputParameter));
+                }
             }
         }
     }

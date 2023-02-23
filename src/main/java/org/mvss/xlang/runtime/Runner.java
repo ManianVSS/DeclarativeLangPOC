@@ -5,6 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.mvss.xlang.dto.Scope;
 import org.mvss.xlang.steps.*;
+import org.mvss.xlang.steps.conditions.Condition;
+import org.mvss.xlang.steps.conditions.Equals;
+import org.mvss.xlang.steps.conditions.NotEquals;
+import org.mvss.xlang.steps.operations.Increment;
 import org.mvss.xlang.utils.ClassPathLoaderUtils;
 import org.mvss.xlang.utils.XMLParser;
 import org.w3c.dom.Document;
@@ -41,6 +45,22 @@ public class Runner {
         stepDefMapping.put("import", Import.class);
         stepDefMapping.put("echo", Echo.class);
 
+        stepDefMapping.put("if", IfStatement.class);
+        stepDefMapping.put("then", IfStatement.Then.class);
+        stepDefMapping.put("elseif", IfStatement.ElseIf.class);
+        stepDefMapping.put("else", IfStatement.Else.class);
+
+        stepDefMapping.put("for", ForStatement.class);
+        stepDefMapping.put("init", ForStatement.Init.class);
+        stepDefMapping.put("update", ForStatement.Update.class);
+        stepDefMapping.put("do", ForStatement.Do.class);
+
+        stepDefMapping.put("increment", Increment.class);
+
+        stepDefMapping.put("equals", Equals.class);
+        stepDefMapping.put("notequals", NotEquals.class);
+
+
         try {
             String mappingFileContents = ClassPathLoaderUtils.readAllText(STEP_MAPPING_XML);
             //noinspection unchecked
@@ -60,6 +80,21 @@ public class Runner {
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public ArrayList<Condition> getConditions(List<Step> steps) {
+        ArrayList<Condition> conditions = null;
+
+        if (steps != null) {
+            conditions = new ArrayList<>();
+            for (Step step : steps) {
+                if (step instanceof Condition) {
+                    conditions.add((Condition) step);
+                }
+            }
+        }
+
+        return conditions;
     }
 
     public ArrayList<Step> getSteps(Element element) throws Throwable {

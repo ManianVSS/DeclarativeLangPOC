@@ -5,7 +5,8 @@ import lombok.Setter;
 import lombok.ToString;
 import org.mvss.xlang.dto.Scope;
 import org.mvss.xlang.runtime.Runner;
-import org.mvss.xlang.runtime.Step;
+
+import java.util.ArrayList;
 
 @Getter
 @Setter
@@ -13,6 +14,10 @@ import org.mvss.xlang.runtime.Step;
 public class FunctionDefinition extends Step {
 
     private String name;
+
+    private ArrayList<String> inputParameters;
+
+    private ArrayList<String> outputParameters;
 
     @Override
     public void execute(Runner runner, Scope scope) {
