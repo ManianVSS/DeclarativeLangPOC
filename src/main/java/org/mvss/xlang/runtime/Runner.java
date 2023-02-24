@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Runner {
 
@@ -32,6 +33,8 @@ public class Runner {
     }
 
     private final HashMap<String, Class<? extends Step>> stepDefMapping = new HashMap<>();
+
+    public static final ConcurrentHashMap<String, Class<?>> typeMapping = new ConcurrentHashMap<>();
 
     private final Scope scope;
 
@@ -60,6 +63,25 @@ public class Runner {
         stepDefMapping.put("equals", Equals.class);
         stepDefMapping.put("notequals", NotEquals.class);
 
+        typeMapping.put("boolean", Boolean.class);
+        typeMapping.put("byte", Byte.class);
+        typeMapping.put("char", Character.class);
+        typeMapping.put("short", Short.class);
+        typeMapping.put("int", Integer.class);
+        typeMapping.put("long", Long.class);
+        typeMapping.put("float", Float.class);
+        typeMapping.put("double", Double.class);
+        typeMapping.put("string", String.class);
+
+        typeMapping.put("boolean array", boolean[].class);
+        typeMapping.put("byte array", byte[].class);
+        typeMapping.put("char array", char[].class);
+        typeMapping.put("short array", short[].class);
+        typeMapping.put("int array", int[].class);
+        typeMapping.put("long array", long[].class);
+        typeMapping.put("float array", float[].class);
+        typeMapping.put("double array", double[].class);
+        typeMapping.put("string array", String[].class);
 
         try {
             String mappingFileContents = ClassPathLoaderUtils.readAllText(STEP_MAPPING_XML);
