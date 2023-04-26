@@ -20,12 +20,12 @@ public class FunctionDefinition extends Step {
     private ArrayList<String> outputParameters;
 
     @Override
-    public void execute(Runner runner, Scope scope) {
-        System.out.println("Function definition: " + this);
+    public Object execute(Runner runner, Scope scope) {
 
         if (scope.getFunctions().containsKey(name)) {
             throw new RuntimeException("Function already defined " + name);
         }
         scope.getFunctions().put(name, steps);
+        return this;
     }
 }

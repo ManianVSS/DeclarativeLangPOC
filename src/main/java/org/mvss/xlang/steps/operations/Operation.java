@@ -14,5 +14,5 @@ public abstract class Operation extends Step {
     protected String resultVar;
 
     @Override
-    public abstract void execute(Runner runner, Scope scope) throws Throwable;
+    public abstract Object execute(Runner runner, Scope scope) throws Throwable;
 }

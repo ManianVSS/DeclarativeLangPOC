@@ -3,9 +3,9 @@ package org.mvss.xlang.steps.conditions;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.mvss.xlang.utils.RegexUtil;
 import org.mvss.xlang.dto.Scope;
 import org.mvss.xlang.runtime.Runner;
-import org.mvss.xlang.utils.RegexUtil;
 
 import java.io.Serializable;
 

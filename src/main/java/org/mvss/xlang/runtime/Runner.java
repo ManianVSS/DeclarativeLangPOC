@@ -3,6 +3,7 @@ package org.mvss.xlang.runtime;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import lombok.Getter;
 import org.mvss.xlang.dto.Scope;
 import org.mvss.xlang.steps.*;
 import org.mvss.xlang.steps.conditions.Condition;
@@ -16,15 +17,15 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import java.io.File;
 import java.io.Serializable;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Runner {
-
-    public static final String STEP_MAPPING_XML = "StepMapping.xml";
+public class Runner implements AutoCloseable {
 
     public static final ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
 
@@ -32,15 +33,25 @@ public class Runner {
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
     }
 
+    @Getter
     private final HashMap<String, Class<? extends Step>> stepDefMapping = new HashMap<>();
 
-    public static final ConcurrentHashMap<String, Class<?>> typeMapping = new ConcurrentHashMap<>();
+    @Getter
+    public final ConcurrentHashMap<String, Class<?>> typeMapping = new ConcurrentHashMap<>();
 
+    @Getter
     private final Scope scope;
 
+    @Getter
+    private String baseDirectory;
+
+
     public Runner() {
+        baseDirectory = System.getProperty("user.dir");
 
         //Built-ins
+        stepDefMapping.put("stepDef", StepDefinition.class);
+        stepDefMapping.put("typeDef", TypeDefinition.class);
         stepDefMapping.put("var", VariableDefinition.class);
         stepDefMapping.put("func", FunctionDefinition.class);
         stepDefMapping.put("call", FunctionCall.class);
@@ -84,23 +95,42 @@ public class Runner {
         typeMapping.put("string array", String[].class);
 
         try {
-            String mappingFileContents = ClassPathLoaderUtils.readAllText(STEP_MAPPING_XML);
-            //noinspection unchecked
-            HashMap<String, Serializable> stepDefImplNameMapping = (HashMap<String, Serializable>) XMLParser.readObject(mappingFileContents);
-
-            for (String key : stepDefImplNameMapping.keySet()) {
-
-                if (stepDefMapping.containsKey(key)) {
-                    throw new RuntimeException("Step definition already mapped for: " + key + " to " + stepDefMapping.get(key).getCanonicalName());
-                }
-
-                String value = (String) stepDefImplNameMapping.get(key);
-                //noinspection unchecked
-                stepDefMapping.put(key, (Class<? extends Step>) Class.forName(value));
-            }
             scope = new Scope();
         } catch (Throwable e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void importStepDefMappingFromFile(String stepDefinitionMappingFileName) throws Exception {
+        String mappingFileContents = ClassPathLoaderUtils.readAllText(stepDefinitionMappingFileName);
+        //noinspection unchecked
+        HashMap<String, Serializable> stepDefImplNameMapping = (HashMap<String, Serializable>) XMLParser.readObject(mappingFileContents);
+
+        for (String key : stepDefImplNameMapping.keySet()) {
+
+            if (stepDefMapping.containsKey(key)) {
+                throw new RuntimeException("Step definition already mapped for: " + key + " to " + stepDefMapping.get(key).getCanonicalName());
+            }
+
+            String value = (String) stepDefImplNameMapping.get(key);
+            //noinspection unchecked
+            stepDefMapping.put(key, (Class<? extends Step>) Class.forName(value));
+        }
+    }
+
+    public void importTypeDefMappingFromFile(String typeDefinitionMappingFileName) throws Exception {
+        String mappingFileContents = ClassPathLoaderUtils.readAllText(typeDefinitionMappingFileName);
+        //noinspection unchecked
+        HashMap<String, Serializable> typeDefImplNameMapping = (HashMap<String, Serializable>) XMLParser.readObject(mappingFileContents);
+
+        for (String key : typeDefImplNameMapping.keySet()) {
+
+            if (typeMapping.containsKey(key)) {
+                throw new RuntimeException("Type definition already mapped for: " + key + " to " + typeMapping.get(key).getCanonicalName());
+            }
+
+            String value = (String) typeDefImplNameMapping.get(key);
+            typeMapping.put(key, Class.forName(value));
         }
     }
 
@@ -146,43 +176,65 @@ public class Runner {
         return steps;
     }
 
-    public void run(String xmlFileName) throws Throwable {
-        run(xmlFileName, this.scope);
+    public Object run(String xmlFileName) throws Throwable {
+        return run(xmlFileName, this.scope);
     }
 
-    public void run(String xmlFileName, Scope scope) throws Throwable {
-        Document doc = XMLParser.readDocumentFromFile(xmlFileName);
-        Element rootElement = doc.getDocumentElement();
-        rootElement.normalize();
-        run(rootElement, scope);
-    }
-
-    public void run(Element element) throws Throwable {
-        run(element, this.scope);
-    }
-
-    public void run(Element element, Scope scope) throws Throwable {
-        run(getSteps(element), scope);
-    }
-
-    public void run(List<Step> steps) throws Throwable {
-        run(steps, this.scope);
-    }
-
-    public void run(List<Step> steps, Scope scope) throws Throwable {
-
-        try {
-            for (Step step : steps) {
-                step.execute(this, scope);
-            }
-        } catch (FunctionCallReturnException ignored) {
+    public Object run(String xmlFileName, Scope scope) throws Throwable {
+        File parentFile = new File(xmlFileName).getParentFile();
+        if (parentFile != null) {
+            baseDirectory = parentFile.getAbsolutePath();
         }
-    }
-
-    public void importFile(String xmlFileName, Scope scope) throws Throwable {
         Document doc = XMLParser.readDocumentFromFile(xmlFileName);
         Element rootElement = doc.getDocumentElement();
         rootElement.normalize();
-        run(rootElement, scope);
+        return run(rootElement, scope);
+    }
+
+    public Object run(Element element) throws Throwable {
+        return run(element, this.scope);
+    }
+
+    public Object run(Element element, Scope scope) throws Throwable {
+        return run(getSteps(element), scope);
+    }
+
+    public Object run(List<Step> steps) throws Throwable {
+        return run(steps, this.scope);
+    }
+
+    public Object run(List<Step> steps, Scope scope) throws Throwable {
+        Object returnValue = null;
+        try {
+
+            for (Step step : steps) {
+                Object stepReturnObject = step.execute(this, scope);
+                if (stepReturnObject != null) {
+                    returnValue = stepReturnObject;
+                }
+            }
+
+        } catch (FunctionCallReturnException functionCallReturnException) {
+            if (functionCallReturnException.getReturnValue() != null) {
+                return functionCallReturnException.getReturnValue();
+            }
+        }
+        return returnValue;
+    }
+
+    public Object importFile(String xmlFileName, Scope scope) throws Throwable {
+        if (Path.of(baseDirectory, xmlFileName).toFile().exists()) {
+            xmlFileName = Path.of(baseDirectory, xmlFileName).toString();
+        }
+
+        Document doc = XMLParser.readDocumentFromFile(xmlFileName);
+        Element rootElement = doc.getDocumentElement();
+        rootElement.normalize();
+        return run(rootElement, scope);
+    }
+
+    @Override
+    public void close() {
+        scope.close();
     }
 }

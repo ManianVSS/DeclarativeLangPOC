@@ -26,8 +26,9 @@ public class Main {
                 formatter.printHelp(XLANG, options);
             } else if (cmd.hasOption(FILE_TO_RUN)) {
                 String fileName = cmd.getOptionValue(FILE_TO_RUN);
-                Runner runner=new Runner();
-                runner.run(fileName);
+                try (Runner runner = new Runner()) {
+                    System.out.println(runner.run(fileName));
+                }
             } else {
                 formatter.printHelp(XLANG, options);
                 System.exit(-1);

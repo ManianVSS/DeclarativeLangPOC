@@ -13,7 +13,7 @@ public class Import extends Step {
     private String fileName;
 
     @Override
-    public void execute(Runner runner, Scope scope) throws Throwable {
-        runner.importFile(fileName, scope);
+    public Object execute(Runner runner, Scope scope) throws Throwable {
+        return runner.importFile(fileName, scope);
     }
 }

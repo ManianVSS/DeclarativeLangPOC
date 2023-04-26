@@ -3,7 +3,6 @@ package org.mvss.xlang.dto;
 import lombok.*;
 import org.mvss.xlang.steps.Step;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -12,10 +11,10 @@ import java.util.concurrent.ConcurrentHashMap;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Scope {
+public class Scope implements AutoCloseable {
     private Scope parentScope;
     @Builder.Default
-    private ConcurrentHashMap<String, Serializable> variables = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Object> variables = new ConcurrentHashMap<>();
     @Builder.Default
     private ConcurrentHashMap<String, ArrayList<Step>> functions = new ConcurrentHashMap<>();
 
@@ -23,7 +22,7 @@ public class Scope {
         return variables.containsKey(name);
     }
 
-    public Serializable getVariable(String name) {
+    public Object getVariable(String name) {
         if (variables.containsKey(name)) {
             return variables.get(name);
         } else if (parentScope != null) {
@@ -33,7 +32,7 @@ public class Scope {
         }
     }
 
-    public void putVariable(String name, Serializable value) {
+    public void putVariable(String name, Object value) {
         variables.put(name, value);
     }
 
@@ -53,5 +52,11 @@ public class Scope {
 
     public void putFunction(String name, ArrayList<Step> steps) {
         functions.put(name, steps);
+    }
+
+    @Override
+    public void close() {
+        variables = null;
+        functions = null;
     }
 }

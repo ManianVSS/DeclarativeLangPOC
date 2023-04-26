@@ -13,26 +13,19 @@ import org.mvss.xlang.steps.conditions.Condition;
 public class ForStatement extends Step {
 
     @Override
-    public void execute(Runner runner, Scope scope) throws Throwable {
+    public Object execute(Runner runner, Scope scope) throws Throwable {
         Step initStep;
         Step conditionStep;
         Step updateStep;
         Step doStep;
 
-        if ((steps.size() != 4) ||
-                !((initStep = steps.get(0)) instanceof ForStatement.Init) ||
-                !((conditionStep = steps.get(1)) instanceof Condition) ||
-                !((updateStep = steps.get(2)) instanceof Update) ||
-                !((doStep = steps.get(3)) instanceof ForStatement.Do)
-        ) {
+        if ((steps.size() != 4) || !((initStep = steps.get(0)) instanceof Init) || !((conditionStep = steps.get(1)) instanceof Condition) || !((updateStep = steps.get(2)) instanceof Update) || !((doStep = steps.get(3)) instanceof Do)) {
             throw new RuntimeException("For syntax error missing or misplaced init/<condition>/update/do block");
         }
         Scope localScope = new Scope();
         localScope.setParentScope(scope);
 
-        for (initStep.execute(runner, localScope);
-             ((Condition) conditionStep).eval(runner, localScope);
-             updateStep.execute(runner, localScope)
+        for (initStep.execute(runner, localScope); ((Condition) conditionStep).eval(runner, localScope); updateStep.execute(runner, localScope)
 
         ) {
             try {
@@ -43,6 +36,7 @@ public class ForStatement extends Step {
                 //continue;
             }
         }
+        return null;
     }
 
     public static class Init extends Step {
@@ -66,7 +60,7 @@ public class ForStatement extends Step {
     public static class Break extends Step {
 
         @Override
-        public void execute(Runner runner, Scope scope) throws Throwable {
+        public Object execute(Runner runner, Scope scope) throws Throwable {
             throw new ForStatementBreakException();
         }
     }
@@ -80,7 +74,7 @@ public class ForStatement extends Step {
     public static class Continue extends Step {
 
         @Override
-        public void execute(Runner runner, Scope scope) throws Throwable {
+        public Object execute(Runner runner, Scope scope) throws Throwable {
             throw new ForStatementContinueException();
         }
     }

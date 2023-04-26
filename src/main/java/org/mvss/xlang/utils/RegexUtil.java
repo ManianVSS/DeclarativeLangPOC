@@ -48,13 +48,13 @@ public class RegexUtil {
 
     public static final Pattern variablePattern = Pattern.compile("\\$\\{(?<var>[A-Za-z0-9-_]+)}");
 
-    public static String replaceVariables(Map<String, Serializable> variableMap, String toReplaceString) {
+    public static String replaceVariables(Map<String, Object> variableMap, String toReplaceString) {
         return replaceVariables(variableMap::get, toReplaceString);
     }
 
-    public static String replaceVariables(Function<String, Serializable> getVariableFunction, String toReplaceString) {
+    public static String replaceVariables(Function<String, Object> getVariableFunction, String toReplaceString) {
         return recursiveReplaceTokens(toReplaceString, variablePattern, match -> {
-                    Serializable objectToReplaceWith = getVariableFunction.apply(match.group("var"));//variableMap.get();
+                    Object objectToReplaceWith = getVariableFunction.apply(match.group("var"));//variableMap.get();
                     return (objectToReplaceWith == null) ? "null" : objectToReplaceWith.toString();
                 }
         );

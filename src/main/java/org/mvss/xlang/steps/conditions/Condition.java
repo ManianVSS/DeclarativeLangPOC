@@ -14,11 +14,13 @@ import org.mvss.xlang.steps.operations.Operation;
 public abstract class Condition extends Operation {
 
     @Override
-    public void execute(Runner runner, Scope scope) throws Throwable {
+    public Boolean execute(Runner runner, Scope scope) throws Throwable {
         if (StringUtils.isNotBlank(resultVar)) {
             boolean result = eval(runner, scope);
             scope.putVariable(resultVar, result);
+            return result;
         }
+        return false;
     }
 
     public abstract boolean eval(Runner runner, Scope scope) throws Throwable;

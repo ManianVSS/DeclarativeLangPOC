@@ -23,9 +23,7 @@ public class FunctionCall extends Step {
     private ArrayList<String> outputParameters;
 
     @Override
-    public void execute(Runner runner, Scope scope) throws Throwable {
-        System.out.println("Function call: " + this);
-
+    public Object execute(Runner runner, Scope scope) throws Throwable {
         if (!scope.getFunctions().containsKey(name)) {
             throw new RuntimeException("Could not find function named: " + name);
         }
@@ -37,16 +35,17 @@ public class FunctionCall extends Step {
         }
 
         ArrayList<Step> functionStep = scope.getFunctions().get(name);
-        runner.run(functionStep, functionScope);
+        Object returnValue = runner.run(functionStep, functionScope);
 
         //Copy back output parameters to parent scope
         if ((outputParameters != null) && !outputParameters.isEmpty()) {
-            ConcurrentHashMap<String, Serializable> scopeVariables = scope.getVariables();
+            ConcurrentHashMap<String, Object> scopeVariables = scope.getVariables();
             for (String outputParameter : outputParameters) {
                 if (functionScope.hasLocalVariable(outputParameter)) {
                     scopeVariables.put(outputParameter, functionScope.getVariable(outputParameter));
                 }
             }
         }
+        return returnValue;
     }
 }
