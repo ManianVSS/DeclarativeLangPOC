@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import lombok.Getter;
+import lombok.Setter;
 import org.mvss.xlang.dto.Scope;
 import org.mvss.xlang.steps.*;
 import org.mvss.xlang.steps.conditions.Condition;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 public class Runner implements AutoCloseable {
 
@@ -44,6 +46,9 @@ public class Runner implements AutoCloseable {
 
     @Getter
     private String baseDirectory;
+
+    @Setter
+    protected Consumer<Object> dependencyInjector;
 
 
     public Runner() {
@@ -170,6 +175,9 @@ public class Runner implements AutoCloseable {
                 Serializable objectRead = XMLParser.readAttributesAsObject(stepElement);
                 Step stepObjectRead = objectMapper.convertValue(objectRead, stepDefClass);
                 stepObjectRead.setSteps(getSteps(stepElement));
+                if (dependencyInjector != null) {
+                    dependencyInjector.accept(stepObjectRead);
+                }
                 steps.add(stepObjectRead);
             }
         }
